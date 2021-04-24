@@ -69,17 +69,17 @@ MatchSchema.statics.initiate = function (sender, receiver) {
     }
     // Build the match instance
     const currentDate = moment().tz("Pacific/Auckland").format();
-    const match = new this({
+    const newMatch = new this({
       receiver, sender, date: { initiated: currentDate }
     });
     // Save the new match instance
     try {
-      await match.save();
+      await newMatch.save();
     } catch (error) {
       return reject({ status: "error", content: error });
     }
     // Success handler
-    return resolve(match);
+    return resolve(newMatch);
   });
 }
 
@@ -102,7 +102,7 @@ MatchSchema.statics.accept = function (id, receiver) {
     }
     if (!match) {
       return reject({ status: "failed", content: "There is no match with this ID." });
-    } else if (match.receiver !== receiver) {
+    } else if ((String(match.receiver)) !== (String(receiver))) {
       return reject({ status: "failed", content: "This user is not the receiver of this match, and therefore, cannot accept this match." });
     }
     // Update the Match
@@ -115,6 +115,30 @@ MatchSchema.statics.accept = function (id, receiver) {
     }
     // Success handler
     return resolve(match);
+  });
+}
+
+MatchSchema.statics.demolish = function (id, user) {
+  return new Promise(async (resolve, reject) => {
+    // Validation
+    let match;
+    try {
+      match = await this.findById(id);
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Check if user is either the sender or receiver
+    if (String(user) !== String(match.receiver) && String(user) !== String(match.sender)) {
+      return reject({ status: "failed", content: "This user have no authorisation to delete this match." });
+    }
+    // Delete match
+    try {
+      await match.deleteOne();
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Success handler
+    return resolve();
   });
 }
 

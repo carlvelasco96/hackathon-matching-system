@@ -41,10 +41,9 @@ app.use(express.json());
 ROUTES
 ========================================================== */
 
-const general = require("./routes/general.js");
-app.use(general);
-const profile = require("./routes/profile.js");
-app.use(profile);
+app.use(require("./routes/general.js"));
+app.use(require("./routes/profile.js"));
+app.use(require("./routes/match.js"));
 
 /* ==========================================================
 END

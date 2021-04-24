@@ -100,6 +100,23 @@ router.get("/match/fetch-approved/:id", async (req, res) => {
   return res.send({ status: "succeeded", content: matches });
 });
 
+// @route   POST
+// @desc    
+// @access  PUBLIC
+router.post("/match/delete", async (req, res) => {
+  // Declare variables
+  const id = mongoose.Types.ObjectId(req.body.id);
+  const user = mongoose.Types.ObjectId(req.body.user);
+  // Delete match
+  try {
+    await Match.demolish(id, user);
+  } catch (data) {
+    return res.send(data);
+  }
+  // Success handler
+  return res.send({ status: "succeeded", content: "The match has been deleted." });
+});
+
 /* ==========================================================
 EXPORT
 ========================================================== */
