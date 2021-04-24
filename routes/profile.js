@@ -54,8 +54,18 @@ router.get("/user/:email", async (req, res) => {
   return res.send({ status: "succeeded", content: user });
 });
 
-router.get("/user/:email/fetch-matches", async () => {
+router.get("/user/:email/fetch-matches", async (req, res) => {
   // Declare variables
+  const email = req.params.email;
+  // Fetch matches
+  let users;
+  try {
+    users = await User.findMatches({ email });
+  } catch (data) {
+    return res.send(data);
+  }
+  // Success handler
+  return res.send({ status: "succeeded", content: users });
 });
 
 /* ==========================================================

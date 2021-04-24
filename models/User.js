@@ -63,6 +63,36 @@ UserSchema.statics.build = function (object = {}) {
   });
 }
 
+UserSchema.statics.findMatches = function (query = {}) {
+  return new Promise(async (resolve, reject) => {
+    // Fetch user of interest
+    let user;
+    try {
+      user = await this.findOne(query);
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Fetch all users
+    let users;
+    try {
+      users = await this.find();
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Find matches
+    let matches = [];
+    for (let i = 0; i < users.length; i++) {
+      const otherUser = users[i];
+      if (user.email === otherUser.email) {
+        continue;
+      }
+      matches.push(otherUser);
+    }
+    // Return matches
+    return resolve(matches);
+  });
+}
+
 /* ==========================================================
 METHODS
 ========================================================== */
