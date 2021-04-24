@@ -35,6 +35,7 @@ MIDDLEWARES
 app.use(express.static(__dirname));
 // Parsing of Incoming Data
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 /* ==========================================================
 ROUTES
@@ -42,6 +43,8 @@ ROUTES
 
 const general = require("./routes/general.js");
 app.use(general);
+const profile = require("./routes/profile.js");
+app.use(profile);
 
 /* ==========================================================
 END
