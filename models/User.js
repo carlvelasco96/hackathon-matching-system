@@ -98,6 +98,30 @@ UserSchema.statics.findMatches = function (query = {}) {
   });
 }
 
+UserSchema.statics.reform = function (id, updates) {
+  return new Promise(async (resolve, reject) => {
+    // Fetch the user
+    let user;
+    try {
+      user = await this.findById(id);
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Update user
+    for (const property in updates) {
+      user[property] = updates[property];
+    }
+    // Save user
+    try {
+      await user.save();
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    // Success handler
+    return resolve(user);
+  });
+}
+
 /* ==========================================================
 METHODS
 ========================================================== */

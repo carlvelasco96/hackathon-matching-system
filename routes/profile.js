@@ -3,6 +3,7 @@ MODULES
 ========================================================== */
 
 const express = require("express");
+const mongoose = require("mongoose");
 
 /* ==========================================================
 VARIABLES
@@ -54,7 +55,7 @@ router.get("/user/:email", async (req, res) => {
   return res.send({ status: "succeeded", content: user });
 });
 
-// @route   GET /user/:email
+// @route   GET /user/:email/fetch-matches
 // @desc    fetching all matches of a user
 // @access  PUBLIC
 router.get("/user/:email/fetch-matches", async (req, res) => {
@@ -69,6 +70,24 @@ router.get("/user/:email/fetch-matches", async (req, res) => {
   }
   // Success handler
   return res.send({ status: "succeeded", content: users });
+});
+
+// @route   POST /user/update
+// @desc    Updating user details
+// @access  PUBLIC
+router.post("/user/update", async (req, res) => {
+  // Declare variables
+  const id = mongoose.Types.ObjectId(req.body.id);
+  const updates = req.body.updates;
+  // Update user
+  let user;
+  try {
+    user = await User.reform(id, updates);
+  } catch (data) {
+    return res.send(data);
+  }
+  // Success handler
+  return res.send({ status: "succeeded", content: user });
 });
 
 /* ==========================================================
