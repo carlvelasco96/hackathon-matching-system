@@ -1,0 +1,28 @@
+{
+  "name": "hackathon-matching-system",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlvelasco96/hackathon-matching-system.git"
+  },
+  "author": "Carlos Aguilera & Carl Velasco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carlvelasco96/hackathon-matching-system/issues"
+  },
+  "homepage": "https://github.com/carlvelasco96/hackathon-matching-system#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.12.5",
+    "socket.io": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
