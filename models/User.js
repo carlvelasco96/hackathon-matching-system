@@ -49,17 +49,24 @@ STATICS
 UserSchema.statics.build = function (object = {}) {
   return new Promise(async (resolve, reject) => {
     // Validation of properties
-    // TO DO
+    // Check if user already exist
+    let user;
+    try {
+      user = await this.findOne({ email: object.email });
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    if (user) return reject({ status: "failed", content: "A user with this email address already exists." });
     // Create instance
-    const user = new this(object);
+    const newUser = new this(object);
     // Save instance
     try {
-      await user.save();
+      await newUser.save();
     } catch (error) {
       return reject({ status: "error", content: error });
     }
     // Success handler
-    return resolve(user);
+    return resolve(newUser);
   });
 }
 

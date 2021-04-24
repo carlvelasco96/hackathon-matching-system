@@ -77,6 +77,23 @@ router.get("/match/fetch-initiated/:id", async (req, res) => {
 // @route   GET
 // @desc    
 // @access  PUBLIC
+router.get("/match/fetch-received/:id", async (req, res) => {
+  // Declare variables
+  const receiver = mongoose.Types.ObjectId(req.params.id);
+  // Fetch matches
+  let matches;
+  try {
+    matches = await Match.find({ receiver, status: "initiated" });
+  } catch (error) {
+    return res.send({ status: "error", content: error });
+  }
+  // Success handler
+  return res.send({ status: "succeeded", content: matches });
+});
+
+// @route   GET
+// @desc    
+// @access  PUBLIC
 router.get("/match/fetch-approved/:id", async (req, res) => {
   // Declare variables
   const id = mongoose.Types.ObjectId(req.params.id);

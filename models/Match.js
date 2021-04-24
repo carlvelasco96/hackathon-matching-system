@@ -44,7 +44,6 @@ STATICS
 MatchSchema.statics.initiate = function (sender, receiver) {
   return new Promise(async (resolve, reject) => {
     // VALIDATION
-    // TO DO
     // Validation of receiver's availability to connect
     let receiverUser;
     try {
@@ -57,14 +56,24 @@ MatchSchema.statics.initiate = function (sender, receiver) {
     } else if (!receiverUser.connect) {
       return reject({ status: "failed", content: "The user is not ready to connect." });
     }
-    // Check if the receiver has already send the user a request
-    let match;
+    // Check if the sender has already sent the user a request
+    let matchSent;
     try {
-      match = await this.findOne({ receiver: sender, sender: receiver });
+      matchSent = await this.findOne({ receiver, sender });
     } catch (error) {
       return reject({ status: "error", content: error });
     }
-    if (match) {
+    if (matchSent) {
+      return reject({ status: "failed", content: "You already have sent a match request." });
+    }
+    // Check if the receiver has already sent the user a request
+    let matchReceived;
+    try {
+      matchReceived = await this.findOne({ receiver: sender, sender: receiver });
+    } catch (error) {
+      return reject({ status: "error", content: error });
+    }
+    if (matchReceived) {
       return reject({ status: "failed", content: "You already have received a match request from this user. Check your requests." });
     }
     // Build the match instance
