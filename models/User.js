@@ -28,7 +28,8 @@ const UserSchema = new Schema({
   },
   hobbies: { type: [String], required: true },
   interests: { type: [String], required: true },
-  preferences: { type: [String], required: true }
+  preferences: { type: [String], required: true },
+  connect: { type: Boolean, default: false }
 });
 
 /* ==========================================================
@@ -43,12 +44,11 @@ STATICS
 
 /**
  * Create a user instance
- * @param {*} object 
- * @param {*} save
+ * @param {Object} object 
  */
 UserSchema.statics.build = function (object = {}) {
   return new Promise(async (resolve, reject) => {
-    // Validation properties
+    // Validation of properties
     // TO DO
     // Create instance
     const user = new this(object);
@@ -63,6 +63,11 @@ UserSchema.statics.build = function (object = {}) {
   });
 }
 
+/**
+ * 
+ * @param {Object} query 
+ * @returns 
+ */
 UserSchema.statics.findMatches = function (query = {}) {
   return new Promise(async (resolve, reject) => {
     // Fetch user of interest

@@ -54,6 +54,9 @@ router.get("/user/:email", async (req, res) => {
   return res.send({ status: "succeeded", content: user });
 });
 
+// @route   GET /user/:email
+// @desc    fetching all matches of a user
+// @access  PUBLIC
 router.get("/user/:email/fetch-matches", async (req, res) => {
   // Declare variables
   const email = req.params.email;

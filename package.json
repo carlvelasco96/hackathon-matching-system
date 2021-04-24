@@ -19,6 +19,7 @@
   "homepage": "https://github.com/carlvelasco96/hackathon-matching-system#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "moment-timezone": "^0.5.33",
     "mongoose": "^5.12.5",
     "socket.io": "^4.0.1"
   },
