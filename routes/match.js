@@ -4,6 +4,7 @@ MODULES
 
 const express = require("express");
 const mongoose = require("mongoose");
+const moment = require("moment-timezone");
 
 /* ==========================================================
 VARIABLES
@@ -16,6 +17,7 @@ MODELS
 ========================================================== */
 
 const Match = require("../models/Match.js");
+const Message = require("../models/Message.js");
 
 /* ==========================================================
 ROUTES
@@ -133,6 +135,53 @@ router.post("/match/delete", async (req, res) => {
   // Success handler
   return res.send({ status: "succeeded", content: "The match has been deleted." });
 });
+
+router.get("/match/fetch-messages/:id", async (req, res) => {
+  // Declare variables
+  const id = mongoose.Types.ObjectId(req.params.id);
+  //
+  let messages;
+  try {
+    messages = await Message.find({ match: id });
+  } catch (error) {
+    return res.send({ status: "error", content: error });
+  }
+  //
+  messages.sort(sortMessages);
+  //
+  return res.send({ status: "succeeded", content: messages });
+});
+
+router.post("/match/send-message", async (req, res) => {
+  // Declare variables
+  const match = mongoose.Types.ObjectId(req.body.match);
+  const sender = mongoose.Types.ObjectId(req.body.sender);
+  const message = req.body.message;
+  //
+  let newMessage;
+  try {
+    newMessage = await Message.build({ match, sender, message });
+  } catch (data) {
+    return res.send(data);
+  }
+  //
+  return res.send({ status: "succeeded", content: newMessage });
+});
+
+const sortMessages = (messageA, massageB) => {
+  const dateA = messageA.date;
+  const dateB = massageB.date;
+  const momentA = moment(dateA);
+  const momentB = moment(dateB);
+  const difference = momentA.diff(momentB);
+  if (difference > 0) {
+    return -1;
+  } else if (difference < 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 /* ==========================================================
 EXPORT
